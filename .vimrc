@@ -6,7 +6,6 @@ if empty(glob("~/.vim/autoload/pathogen.vim"))
     execute '!mkdir -p ~/.vim/autoload ~/.vim/bundle && curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim'
 endif
 "}}}
-
 " Plugins {{{
 call plug#begin('~/.vim/plugged')
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
@@ -39,7 +38,6 @@ call plug#end()
 execute pathogen#infect()
 call pathogen#helptags()
 "}}}
-
 " all sets {{{
 augroup jumpToLastPosition
     au!
@@ -78,7 +76,6 @@ set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
 "   hi link commonOperator Special
 " endfunction
 "}}}
-
 "mappings for all filetypes {{{
 "---------------------------------------------------------------------------------------------
 "experimental key mappings
@@ -91,6 +88,10 @@ cmap w!! w !sudo tee % >/dev/null
 
 " Map F4 key to toggle spell checking
 noremap <F4> :setlocal spell! spelllang=en_us<CR>
+
+"make Y and V same as D&C
+nnoremap Y yg_
+nnoremap V vg_
 
 "search and replace
 nnoremap <C-f> /
@@ -162,7 +163,6 @@ augroup END
 "source vimrc
 nnoremap <leader>sv :source $MYVIMRC<cr>
 "}}}
-
 "autocmds {{{
 "---------------------------------------------------------------------------------------------------
 " Vimscript file settings {{{
@@ -199,7 +199,6 @@ augroup filetype_python
     autocmd FileType htmldjango,html inoremap {7 {%  %}<Left><Left><Left>
 augroup end
 " }}}
-
 "plugin related {{{
 "---------------------------------------------------------------------------------------------------
 " don't let auto-pairs use <c-h>
