@@ -1,0 +1,281 @@
+if empty(glob("~/.vim/autoload/plug.vim"))
+    execute '!mkdir -p .vim/autoload && curl -fLo ~/.vim/autoload/plug.vim https://raw.github.com/junegunn/vim-plug/master/plug.vim'
+endif
+if empty(glob("~/.vim/autoload/pathogen.vim"))
+    execute '!mkdir -p ~/.vim/autoload ~/.vim/bundle && curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim'
+endif
+" Load vim-plug
+call plug#begin('~/.vim/plugged')
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'Yggdroot/indentLine'
+Plug 'morhetz/gruvbox'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-eunuch'
+Plug 'michaeljsmith/vim-indent-object'
+Plug 'bkad/CamelCaseMotion'
+Plug 'SirVer/ultisnips'
+Plug 'ervandew/supertab'
+Plug 'honza/vim-snippets'
+Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
+Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim', {'on': 'Files'}
+Plug 'ycm-core/YouCompleteMe'
+Plug 'jiangmiao/auto-pairs'
+Plug 'gryf/pylint-vim', {'for': 'python'}
+" Plug 'maxbrunsfeld/vim-yankstack'
+Plug 'justinmk/vim-sneak'
+Plug 'turbio/bracey.vim'
+Plug 'adelarsq/vim-matchit'
+" Plug 'jvanja/vim-bootstrap4-snippets', { 'for': 'html' }
+" Plug 'tpope/vim-vinegar'
+call plug#end()
+execute pathogen#infect()
+call pathogen#helptags()
+
+au BufRead,BufNewFile *.asm set filetype=mips
+
+"copy paste from vim.sensible
+"Jumpto last position
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+endif
+
+if v:version > 703 || v:version == 703 && has("patch541")
+  set formatoptions+=j " Delete comment character when joining commented lines
+endif
+
+if &history < 1000
+  set history=1000
+endif
+
+if !has('nvim') && &ttimeoutlen == -1
+  set ttimeout
+  set ttimeoutlen=100
+endif
+
+set incsearch
+
+if !&scrolloff
+  set scrolloff=1
+endif
+
+set autoread
+if &tabpagemax < 50
+  set tabpagemax=50
+endif
+"end of vim sensible
+
+"gri changes
+set hlsearch
+set showmatch		" Show matching brackets.
+set ignorecase
+set smartcase	
+set mouse=a
+set showcmd
+set background=dark
+syntax on
+set encoding=utf-8
+set number
+filetype indent plugin on
+set tags=tags
+" set hidden "to quit unclosed buffers wtih :q
+set splitright
+set pastetoggle=<F2>
+set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
+
+" autocmd FileType * call <SID>def_base_syntax() " autocmd Syntax may be better
+" function! s:def_base_syntax()
+"   " Simple example
+"   syntax match commonOperator "\(+\|=\|-\|\^\|\*\)"
+"   hi link commonOperator Special
+" endfunction
+
+
+"experimental key mappings
+"delete first space
+nnoremap <F5> :buffers<CR>:buffer<Space>
+nnoremap d<space> f<space>x
+
+" Map w!! to write file with sudo, when forgot to open with sudo.
+cmap w!! w !sudo tee % >/dev/null
+
+" Map F4 key to toggle spell checking
+noremap <F4> :setlocal spell! spelllang=en_us<CR>
+
+"search and replace
+nnoremap <C-f> /
+nnoremap <C-x> :nohlsearch<CR>
+nnoremap <C-g> :%s//gc<left><left><left>
+
+"copy to clipboard
+vnoremap <C-c> "+y
+
+"custom key mappings
+"for turkish q only
+nnoremap + $
+vnoremap + $
+onoremap + $
+"move around
+nnoremap ö <C-o>
+nnoremap ç <C-i>
+nnoremap şş :bn<CR>
+nnoremap şi :bp<CR>
+"jump to definition
+map ü <C-]> 
+
+inoremap jk <ESC><right>
+vnoremap . :norm.<CR>
+
+" nnoremap <SPACE> <Nop>
+let mapleader = " "
+nnoremap <leader>w :w<CR>
+nnoremap <leader>q :q<CR>
+nnoremap <leader>d :bd<CR>
+nnoremap <leader>a <ESC>gg<S-v>G
+"paste without yanking the seleceted text
+vnoremap p "_dP
+
+inoremap <C-f> <C-k> "free special input map first
+inoremap <C-g> <Left>
+inoremap <C-l> <Right>
+inoremap <C-j> <Down>
+inoremap <C-h> <Left>
+inoremap <C-k> <Up>
+
+"django mappings
+inoremap {% {%  %}<Left><Left><Left>
+inoremap {7 {%  %}<Left><Left><Left>
+
+"split mappings & settings
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+nnoremap c" ci"
+nnoremap c' ci'
+nnoremap c( ci(
+nnoremap c[ ci[
+nnoremap c{ ci{
+
+nnoremap d" da"
+nnoremap d' da'
+nnoremap d( da(
+nnoremap d[ da[
+nnoremap d{ da{
+
+"quick vimrc edit
+nnoremap <leader>v :split $MYVIMRC<CR>
+augroup myvimrc
+    au!
+    au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
+augroup END
+
+
+"---------------------------------------------------------------------------------------------------
+
+
+"plugin related
+"vim sneak
+map , <Plug>Sneak_;
+map ; <Plug>Sneak_,
+let g:sneak#s_next = 1
+" 2-character Sneak (default)
+nmap s <Plug>Sneak_s
+nmap S <Plug>Sneak_S
+" visual-mode
+xmap s <Plug>Sneak_s
+xmap S <Plug>Sneak_S
+" operator-pending-mode
+omap s <Plug>Sneak_s
+omap S <Plug>Sneak_S
+
+"CamelCaseMotion
+map w <Plug>CamelCaseMotion_w
+map b <Plug>CamelCaseMotion_b
+map e <Plug>CamelCaseMotion_e
+
+"NERDtree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" nnoremap <C-n> :NERDTreeToggle<CR>
+let NERDTreeIgnore=['\.pyc$', '^__pycache__$', '\.bin$', '\.db$']
+fun! ToggleNERDTreeWithRefresh()
+    :NERDTreeToggle 
+    if(exists("b:NERDTreeType") == 1)
+        call feedkeys("R")  
+    endif   
+endf 
+
+nnoremap <silent> <c-n> :call ToggleNERDTreeWithRefresh()<cr>
+
+
+"vim themes
+let g:gruvbox_italic=1
+colorscheme gruvbox
+
+"grepper
+nnoremap <leader>g :Grepper<cr>
+let g:grepper = { 'next_tool': '<leader>h' }
+nmap gs  <plug>(GrepperOperator)
+vmap gs  <plug>(GrepperOperator)
+xmap gs  <plug>(GrepperOperator)
+
+
+"FZF
+map <leader>o :Files<CR>
+let $FZF_DEFAULT_COMMAND = 'ag -g ""' "need to install silversearcher-ag
+let g:fzf_action = {
+\ 'ctrl-t': 'tab split',
+\ 'ctrl-i': 'split',
+\ 'ctrl-s': 'vsplit' }
+
+
+"python mappings
+autocmd FileType python nnoremap <leader>t :exec '!pytest' shellescape(@%, 1)<cr>
+autocmd FileType python nnoremap <leader>r :exec '!python' shellescape(@%, 1)<cr>
+"python mode
+let g:pymode_python = 'python3'
+let g:pymode_options_colorcolumn = 0
+let g:pymode_rope = 1
+let g:pymode_rope_regenerate_on_write = 1
+let g:pymode_rope_lookup_project = 0
+let g:pymode_rope_autoimport = 1
+set completeopt=menuone,noinsert
+" let g:pymode_rope_rename_bind = '<C-c>r'
+"lint and save
+autocmd FileType python nnoremap <leader>l :PymodeLintAuto<cr>:w<cr> 
+let g:pymode_lint_ignore = ["E501","W0611","W0404","E702", "E711"]
+let g:pymode_lint_unmodified = 1
+" let g:pymode_lint_on_fly = 1
+let g:pymode_run = 0
+let g:pymode_lint_on_write = 1
+let g:pymode_syntax_highlight_equal_operator = 1
+let g:pymode_syntax_space_errors = 0
+let g:pymode_rope_completion = 0
+let g:pymode_rope_autoimport_modules = ['os', 'django']
+
+" make YCM compatible with UltiSnips (using supertab)
+let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+let g:SuperTabDefaultCompletionType = '<C-n>'
+
+" better key bindings for UltiSnipsExpandTrigger
+let g:UltiSnipsExpandTrigger = "<tab>"
+let g:UltiSnipsJumpForwardTrigger = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+
+"Bracey HTML mappings
+autocmd FileType html nnoremap <leader>r :BraceyReload<cr>
+" autocmd FileType html inoremap <leader>r <Esc>:BraceyReload<cr>a
+autocmd FileType html nnoremap <leader>b :Bracey<cr>
+" let g:bracey_server_port = 6001
+" let g:bracey_refresh_on_save =1
+autocmd FileType html setlocal tabstop=8 softtabstop=0 expandtab shiftwidth=2 smarttab
+autocmd FileType nginx setlocal commentstring=#\ %s
+
+"--------------------------------------
+"vimscript experiments
