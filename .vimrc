@@ -1,10 +1,13 @@
+" Download vim-plug and pathogen when vim runs for the very first time {{{
 if empty(glob("~/.vim/autoload/plug.vim"))
     execute '!mkdir -p .vim/autoload && curl -fLo ~/.vim/autoload/plug.vim https://raw.github.com/junegunn/vim-plug/master/plug.vim'
 endif
 if empty(glob("~/.vim/autoload/pathogen.vim"))
     execute '!mkdir -p ~/.vim/autoload ~/.vim/bundle && curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim'
 endif
-" Load vim-plug
+"}}}
+
+" Plugins {{{
 call plug#begin('~/.vim/plugged')
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'vim-airline/vim-airline'
@@ -35,41 +38,22 @@ Plug 'adelarsq/vim-matchit'
 call plug#end()
 execute pathogen#infect()
 call pathogen#helptags()
+"}}}
 
-au BufRead,BufNewFile *.asm set filetype=mips
+" all sets {{{
+augroup jumpToLastPosition
+    au!
+    au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif 
+augroup end
 
-"copy paste from vim.sensible
-"Jumpto last position
-if has("autocmd")
-  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-endif
-
-if v:version > 703 || v:version == 703 && has("patch541")
-  set formatoptions+=j " Delete comment character when joining commented lines
-endif
-
-if &history < 1000
-  set history=1000
-endif
-
-if !has('nvim') && &ttimeoutlen == -1
-  set ttimeout
-  set ttimeoutlen=100
-endif
-
-set incsearch
-
-if !&scrolloff
-  set scrolloff=1
-endif
-
+set formatoptions+=j " Delete comment character when joining commented lines
+set history=1000
+set ttimeout
+set ttimeoutlen=100
+set scrolloff=1
+set tabpagemax=50
 set autoread
-if &tabpagemax < 50
-  set tabpagemax=50
-endif
-"end of vim sensible
-
-"gri changes
+set incsearch
 set hlsearch
 set showmatch		" Show matching brackets.
 set ignorecase
@@ -93,8 +77,10 @@ set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
 "   syntax match commonOperator "\(+\|=\|-\|\^\|\*\)"
 "   hi link commonOperator Special
 " endfunction
+"}}}
 
-
+"mappings for all filetypes {{{
+"---------------------------------------------------------------------------------------------
 "experimental key mappings
 "delete first space
 nnoremap <F5> :buffers<CR>:buffer<Space>
@@ -125,7 +111,7 @@ nnoremap ç <C-i>
 nnoremap şş :bn<CR>
 nnoremap şi :bp<CR>
 "jump to definition
-map ü <C-]> 
+nnoremap ü <C-]> 
 
 inoremap jk <ESC><right>
 vnoremap . :norm.<CR>
@@ -139,16 +125,14 @@ nnoremap <leader>a <ESC>gg<S-v>G
 "paste without yanking the seleceted text
 vnoremap p "_dP
 
-inoremap <C-f> <C-k> "free special input map first
+"free special input map first
+inoremap <C-f> <C-k>
 inoremap <C-g> <Left>
 inoremap <C-l> <Right>
 inoremap <C-j> <Down>
 inoremap <C-h> <Left>
 inoremap <C-k> <Up>
 
-"django mappings
-inoremap {% {%  %}<Left><Left><Left>
-inoremap {7 {%  %}<Left><Left><Left>
 
 "split mappings & settings
 nnoremap <C-J> <C-W><C-J>
@@ -156,33 +140,76 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-nnoremap c" ci"
-nnoremap c' ci'
-nnoremap c( ci(
-nnoremap c[ ci[
-nnoremap c{ ci{
-
-nnoremap d" da"
-nnoremap d' da'
-nnoremap d( da(
-nnoremap d[ da[
-nnoremap d{ da{
+onoremap " i"
+onoremap ' i'
+onoremap ( i(
+onoremap [ i[
+onoremap { i{
+"feyz almalik
+onoremap in( :<c-u>normal! f(vi(<cr>
+onoremap il( :<c-u>normal! F(vi(<cr>
+augroup markdownExample
+    au!
+    au FileType markdown onoremap ih :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rkvg_"<cr>
+augroup end
 
 "quick vimrc edit
 nnoremap <leader>v :split $MYVIMRC<CR>
 augroup myvimrc
     au!
-    au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
+    au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc source $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
 augroup END
+"source vimrc
+nnoremap <leader>sv :source $MYVIMRC<cr>
+"}}}
 
-
+"autocmds {{{
 "---------------------------------------------------------------------------------------------------
+" Vimscript file settings {{{
+augroup filetype_vim
+    autocmd!
+    autocmd FileType vim setlocal foldmethod=marker
+augroup end
+" }}}
 
+augroup mips
+    au!
+    au BufRead,BufNewFile *.asm setlocal filetype=mips
+augroup end
 
-"plugin related
+augroup filetype_html
+    autocmd!
+    autocmd FileType html nnoremap <leader>r :BraceyReload<cr>
+    " autocmd FileType html inoremap <leader>r <Esc>:BraceyReload<cr>a
+    autocmd FileType html nnoremap <leader>b :Bracey<cr>
+    autocmd FileType html setlocal tabstop=8 softtabstop=0 expandtab shiftwidth=2 smarttab
+    "js comment in html
+    autocmd FileType html nnoremap <buffer> <leader>c I// <esc>
+    autocmd FileType nginx setlocal commentstring=#\ %s
+augroup end
+
+"python mappings
+augroup filetype_python
+    autocmd!
+    autocmd FileType python nnoremap <leader>t :exec '!pytest' shellescape(@%, 1)<cr>
+    autocmd FileType python nnoremap <leader>r :exec '!python' shellescape(@%, 1)<cr>
+    "lint and save
+    autocmd FileType python nnoremap <leader>l :PymodeLintAuto<cr>:w<cr> 
+    autocmd FileType htmldjango,html inoremap {% {%  %}<Left><Left><Left>
+    autocmd FileType htmldjango,html inoremap {7 {%  %}<Left><Left><Left>
+augroup end
+" }}}
+
+"plugin related {{{
+"---------------------------------------------------------------------------------------------------
+" don't let auto-pairs use <c-h>
+if !exists('g:AutoPairsMapCh')
+  let g:AutoPairsMapCh = 1
+end
+
 "vim sneak
-map , <Plug>Sneak_;
-map ; <Plug>Sneak_,
+nmap , <Plug>Sneak_;
+nmap ; <Plug>Sneak_,
 let g:sneak#s_next = 1
 " 2-character Sneak (default)
 nmap s <Plug>Sneak_s
@@ -193,11 +220,13 @@ xmap S <Plug>Sneak_S
 " operator-pending-mode
 omap s <Plug>Sneak_s
 omap S <Plug>Sneak_S
+" disable vSneak_S for vim-surround vS
+vmap <nop> <Plug>Sneak_S
 
 "CamelCaseMotion
-map w <Plug>CamelCaseMotion_w
-map b <Plug>CamelCaseMotion_b
-map e <Plug>CamelCaseMotion_e
+nmap w <Plug>CamelCaseMotion_w
+nmap b <Plug>CamelCaseMotion_b
+nmap e <Plug>CamelCaseMotion_e
 
 "NERDtree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
@@ -212,7 +241,6 @@ endf
 
 nnoremap <silent> <c-n> :call ToggleNERDTreeWithRefresh()<cr>
 
-
 "vim themes
 let g:gruvbox_italic=1
 colorscheme gruvbox
@@ -224,19 +252,14 @@ nmap gs  <plug>(GrepperOperator)
 vmap gs  <plug>(GrepperOperator)
 xmap gs  <plug>(GrepperOperator)
 
-
 "FZF
-map <leader>o :Files<CR>
+nnoremap <leader>o :Files<CR>
 let $FZF_DEFAULT_COMMAND = 'ag -g ""' "need to install silversearcher-ag
 let g:fzf_action = {
-\ 'ctrl-t': 'tab split',
-\ 'ctrl-i': 'split',
-\ 'ctrl-s': 'vsplit' }
+            \ 'ctrl-t': 'tab split',
+            \ 'ctrl-i': 'split',
+            \ 'ctrl-s': 'vsplit' }
 
-
-"python mappings
-autocmd FileType python nnoremap <leader>t :exec '!pytest' shellescape(@%, 1)<cr>
-autocmd FileType python nnoremap <leader>r :exec '!python' shellescape(@%, 1)<cr>
 "python mode
 let g:pymode_python = 'python3'
 let g:pymode_options_colorcolumn = 0
@@ -246,8 +269,6 @@ let g:pymode_rope_lookup_project = 0
 let g:pymode_rope_autoimport = 1
 set completeopt=menuone,noinsert
 " let g:pymode_rope_rename_bind = '<C-c>r'
-"lint and save
-autocmd FileType python nnoremap <leader>l :PymodeLintAuto<cr>:w<cr> 
 let g:pymode_lint_ignore = ["E501","W0611","W0404","E702", "E711"]
 let g:pymode_lint_unmodified = 1
 " let g:pymode_lint_on_fly = 1
@@ -269,13 +290,13 @@ let g:UltiSnipsJumpForwardTrigger = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
 "Bracey HTML mappings
-autocmd FileType html nnoremap <leader>r :BraceyReload<cr>
-" autocmd FileType html inoremap <leader>r <Esc>:BraceyReload<cr>a
-autocmd FileType html nnoremap <leader>b :Bracey<cr>
 " let g:bracey_server_port = 6001
 " let g:bracey_refresh_on_save =1
-autocmd FileType html setlocal tabstop=8 softtabstop=0 expandtab shiftwidth=2 smarttab
-autocmd FileType nginx setlocal commentstring=#\ %s
+"
+"}}}
 
 "--------------------------------------
 "vimscript experiments
+iabbrev retrun return
+hi SpellBad cterm=underline
+
