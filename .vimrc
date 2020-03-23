@@ -39,11 +39,6 @@ execute pathogen#infect()
 call pathogen#helptags()
 "}}}
 " all sets {{{
-augroup jumpToLastPosition
-    au!
-    au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif 
-augroup end
-
 set formatoptions+=j " Delete comment character when joining commented lines
 set history=1000
 set ttimeout
@@ -84,7 +79,7 @@ nnoremap <F5> :buffers<CR>:buffer<Space>
 nnoremap d<space> f<space>x
 
 " Map w!! to write file with sudo, when forgot to open with sudo.
-cmap w!! w !sudo tee % >/dev/null
+cnoremap w!! w !sudo tee % >/dev/null
 
 " Map F4 key to toggle spell checking
 noremap <F4> :setlocal spell! spelllang=en_us<CR>
@@ -150,27 +145,31 @@ onoremap { i{
 onoremap in( :<c-u>normal! f(vi(<cr>
 onoremap il( :<c-u>normal! F(vi(<cr>
 augroup markdownExample
-    au!
-    au FileType markdown onoremap ih :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rkvg_"<cr>
+    autocmd!
+    autocmd FileType markdown onoremap ih :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rkvg_"<cr>
 augroup end
 
 "quick vimrc edit
 nnoremap <leader>v :split $MYVIMRC<CR>
 augroup myvimrc
-    au!
-    au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc source $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
+    autocmd!
+    autocmd BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc source $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
 augroup END
 "source vimrc
 nnoremap <leader>sv :source $MYVIMRC<cr>
 "}}}
 "autocmds {{{
 "---------------------------------------------------------------------------------------------------
-" Vimscript file settings {{{
+
 augroup filetype_vim
     autocmd!
     autocmd FileType vim setlocal foldmethod=marker
 augroup end
-" }}}
+
+augroup jumpToLastPosition
+    autocmd!
+    autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif 
+augroup end
 
 augroup mips
     au!
