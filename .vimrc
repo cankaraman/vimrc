@@ -1,4 +1,4 @@
-" Download vim-plug and pathogen when vim runs for the very first time {{{
+" Downloa vim-plug and pathogen when vim runs for the very first time {{{
 if empty(glob("~/.vim/autoload/plug.vim"))
     execute '!mkdir -p .vim/autoload && curl -fLo ~/.vim/autoload/plug.vim https://raw.github.com/junegunn/vim-plug/master/plug.vim'
 endif
@@ -93,7 +93,7 @@ noremap <F4> :setlocal spell! spelllang=en_us<CR>
 
 "make Y and V same as D&C
 nnoremap Y yg_
-nnoremap V vg_
+" nnoremap V vg_
 
 "search and replace
 nnoremap <C-f> /
@@ -169,7 +169,9 @@ nnoremap <leader>sv :source $MYVIMRC<cr>
 augroup filetype_vim
     autocmd!
     autocmd FileType vim setlocal foldmethod=marker
-    autocmd FileType vim setlocal foldmethod=marker
+    "always use case sensitive comparison
+    autocmd FileType vim inoreabbrev <buffer> == ==#
+    autocmd FileType vim inoreabbrev <buffer> != !=#
 augroup end
 
 augroup jumpToLastPosition
@@ -303,4 +305,4 @@ let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 "vimscript experiments
 iabbrev retrun return
 hi SpellBad cterm=underline
-
+nnoremap <leader>d :execute "normal! ddi\<c-g>u\edd"<cr>
