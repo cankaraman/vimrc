@@ -39,6 +39,7 @@ execute pathogen#infect()
 call pathogen#helptags()
 "}}}
 " all sets {{{
+let &number = 1
 set formatoptions+=j " Delete comment character when joining commented lines
 set history=1000
 set ttimeout
@@ -56,7 +57,6 @@ set showcmd
 set background=dark
 syntax on
 set encoding=utf-8
-set number
 filetype indent plugin on
 set tags=tags
 " set hidden "to quit unclosed buffers wtih :q
@@ -129,13 +129,11 @@ nnoremap <leader>a <ESC>gg<S-v>G
 vnoremap p "_dP
 
 "free special input map first
-inoremap <C-f> <C-k>
-inoremap <C-g> <Left>
+inoremap <C-k> <nop>
 inoremap <C-l> <Right>
 inoremap <C-j> <Down>
 inoremap <C-h> <Left>
 inoremap <C-k> <Up>
-
 
 "split mappings & settings
 nnoremap <C-J> <C-W><C-J>
@@ -209,7 +207,7 @@ augroup end
 "---------------------------------------------------------------------------------------------------
 " don't let auto-pairs use <c-h>
 if !exists('g:AutoPairsMapCh')
-  let g:AutoPairsMapCh = 1
+  let g:AutoPairsMapCh = 0
 end
 
 "vim sneak
