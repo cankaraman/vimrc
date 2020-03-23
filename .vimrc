@@ -74,6 +74,13 @@ set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
 "mappings for all filetypes {{{
 "---------------------------------------------------------------------------------------------
 "experimental key mappings
+" till the end of the line
+nnoremap L g_
+onoremap L g_
+" till the begining of the line
+nnoremap H ^
+onoremap H ^
+
 "delete first space
 nnoremap <F5> :buffers<CR>:buffer<Space>
 nnoremap d<space> f<space>x
