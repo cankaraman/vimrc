@@ -169,6 +169,7 @@ nnoremap <leader>sv :source $MYVIMRC<cr>
 augroup filetype_vim
     autocmd!
     autocmd FileType vim setlocal foldmethod=marker
+    autocmd FileType vim setlocal foldmethod=marker
 augroup end
 
 augroup jumpToLastPosition
@@ -183,9 +184,9 @@ augroup end
 
 augroup filetype_html
     autocmd!
-    autocmd FileType html nnoremap <leader>r :BraceyReload<cr>
+    autocmd FileType html nnoremap <buffer> <leader>r :BraceyReload<cr>
     " autocmd FileType html inoremap <leader>r <Esc>:BraceyReload<cr>a
-    autocmd FileType html nnoremap <leader>b :Bracey<cr>
+    autocmd FileType html nnoremap <buffer> <leader>b :Bracey<cr>
     autocmd FileType html setlocal tabstop=8 softtabstop=0 expandtab shiftwidth=2 smarttab
     "js comment in html
     autocmd FileType html nnoremap <buffer> <leader>c I// <esc>
@@ -195,12 +196,12 @@ augroup end
 "python mappings
 augroup filetype_python
     autocmd!
-    autocmd FileType python nnoremap <leader>t :exec '!pytest' shellescape(@%, 1)<cr>
-    autocmd FileType python nnoremap <leader>r :exec '!python' shellescape(@%, 1)<cr>
+    autocmd FileType python nnoremap <buffer> <leader>t :exec '!pytest' shellescape(@%, 1)<cr>
+    autocmd FileType python nnoremap <buffer> <leader>r :exec '!python' shellescape(@%, 1)<cr>
     "lint and save
     autocmd FileType python nnoremap <leader>l :PymodeLintAuto<cr>:w<cr> 
-    autocmd FileType htmldjango,html inoremap {% {%  %}<Left><Left><Left>
-    autocmd FileType htmldjango,html inoremap {7 {%  %}<Left><Left><Left>
+    autocmd FileType htmldjango,html inoremap <buffer> {% {%  %}<Left><Left><Left>
+    autocmd FileType htmldjango,html inoremap <buffer> {7 {%  %}<Left><Left><Left>
 augroup end
 " }}}
 "plugin related {{{
