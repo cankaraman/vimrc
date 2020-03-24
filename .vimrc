@@ -252,8 +252,8 @@ let g:gruvbox_italic=1
 colorscheme gruvbox
 
 "grepper
-nnoremap <leader>g :Grepper<cr>
-let g:grepper = { 'next_tool': '<leader>h' }
+nnoremap <leader>m :Grepper<cr>
+let g:grepper = { 'next_tool': '<c-h>' }
 nmap gs  <plug>(GrepperOperator)
 vmap gs  <plug>(GrepperOperator)
 xmap gs  <plug>(GrepperOperator)
@@ -306,3 +306,5 @@ let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 iabbrev retrun return
 hi SpellBad cterm=underline
 nnoremap <leader>d :execute "normal! ddi\<c-g>u\edd"<cr>
+cnoremap <c-h> <left>
+cnoremap <c-l> <right>
