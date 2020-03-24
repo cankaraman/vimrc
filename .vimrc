@@ -318,4 +318,7 @@ function! s:DeleteSpace()
     endif
     let @@ = saved_unnamed_register 
 endfunction
-" nnoremap <leader>g :silent execute "grep! -R " . shellescape(expand("<cWORD>")) . " %:p:h"<cr>:copen 5<cr>:redraw!<cr>
+ " nnoremap <leader>g :silent execute "grep! -R " . shellescape(expand("<cWORD>")) . " %:p:h"<cr>:copen 5<cr>:redraw!<cr>
+hi! link Operator GruvboxRed
+" setlocal foldmethod=indent
+" setlocal foldlevel=1
