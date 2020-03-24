@@ -81,9 +81,7 @@ onoremap L g_
 nnoremap H ^
 onoremap H ^
 
-"delete first space
 nnoremap <F5> :buffers<CR>:buffer<Space>
-nnoremap d<space> f<space>x
 
 " Map w!! to write file with sudo, when forgot to open with sudo.
 cnoremap w!! w !sudo tee % >/dev/null
@@ -252,7 +250,7 @@ let g:gruvbox_italic=1
 colorscheme gruvbox
 
 "grepper
-nnoremap <leader>m :Grepper<cr>
+nnoremap <leader>g :Grepper<cr>
 let g:grepper = { 'next_tool': '<c-h>' }
 nmap gs  <plug>(GrepperOperator)
 vmap gs  <plug>(GrepperOperator)
@@ -308,3 +306,16 @@ hi SpellBad cterm=underline
 nnoremap <leader>d :execute "normal! ddi\<c-g>u\edd"<cr>
 cnoremap <c-h> <left>
 cnoremap <c-l> <right>
+" delete first space
+nnoremap <silent> d<space> :<c-u>call <SID>DeleteSpace()<cr>
+function! s:DeleteSpace()
+    let saved_unnamed_register = @@
+    execute "normal! vy"
+    if @@ ==# " "
+        execute "normal! x"
+    else
+       execute "normal! f x"
+    endif
+    let @@ = saved_unnamed_register 
+endfunction
+" nnoremap <leader>g :silent execute "grep! -R " . shellescape(expand("<cWORD>")) . " %:p:h"<cr>:copen 5<cr>:redraw!<cr>
