@@ -309,14 +309,9 @@ cnoremap <c-l> <right>
 " delete first space
 nnoremap <silent> d<space> :<c-u>call <SID>DeleteSpace()<cr>
 function! s:DeleteSpace()
-    let saved_unnamed_register = @@
-    execute "normal! vy"
-    if @@ ==# " "
-        execute "normal! x"
-    else
-       execute "normal! f x"
-    endif
-    let @@ = saved_unnamed_register 
+    " accept the match under cursor with 'c' flag
+    call search('\v ', 'c')
+    execute "normal! x"
 endfunction
  " nnoremap <leader>g :silent execute "grep! -R " . shellescape(expand("<cWORD>")) . " %:p:h"<cr>:copen 5<cr>:redraw!<cr>
 hi! link Operator GruvboxRed
