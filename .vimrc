@@ -1,4 +1,4 @@
-" Downloa vim-plug and pathogen when vim runs for the very first time {{{
+" Download vim-plug and pathogen when vim runs for the very first time {{{
 if empty(glob("~/.vim/autoload/plug.vim"))
     execute '!mkdir -p .vim/autoload && curl -fLo ~/.vim/autoload/plug.vim https://raw.github.com/junegunn/vim-plug/master/plug.vim'
 endif
@@ -28,16 +28,32 @@ Plug 'junegunn/fzf.vim', {'on': 'Files'}
 Plug 'ycm-core/YouCompleteMe'
 Plug 'jiangmiao/auto-pairs'
 Plug 'gryf/pylint-vim', {'for': 'python'}
-" Plug 'maxbrunsfeld/vim-yankstack'
 Plug 'justinmk/vim-sneak'
 Plug 'turbio/bracey.vim'
 Plug 'adelarsq/vim-matchit'
+Plug 'sheerun/vim-polyglot'
+Plug 'dense-analysis/ale', {'for': 'javascript'}
 " Plug 'jvanja/vim-bootstrap4-snippets', { 'for': 'html' }
 " Plug 'tpope/vim-vinegar'
+" vim git
+" Plug 'maxbrunsfeld/vim-yankstack'
 call plug#end()
 execute pathogen#infect()
 call pathogen#helptags()
 "}}}
+"experimental plugins
+let b:ale_fixers = {'javascript': ['eslint']} "add prettier later
+let g:ale_fix_on_save = 1
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
+let g:ale_open_list = 1
+" let g:ale_keep_list_window_open = 1
+augroup filetype_javascript
+    autocmd!
+    autocmd FileType javascript nnoremap <buffer> <leader>r :execute '!node' shellescape(@%, 1)<cr>
+    "lint and save
+    autocmd FileType javascript nnoremap <leader>l <Plug>(ale_fix)
+augroup end
 " all sets {{{
 let &number = 1
 set formatoptions+=j " Delete comment character when joining commented lines
@@ -72,8 +88,11 @@ set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
 " endfunction
 "}}}
 "mappings for all filetypes {{{
-"---------------------------------------------------------------------------------------------
 "experimental key mappings
+" ----------------------
+" paste unnamed register in the insert mode
+inoremap <c-v> <c-r>"
+
 " till the end of the line
 nnoremap L g_
 onoremap L g_
@@ -197,7 +216,7 @@ augroup end
 augroup filetype_python
     autocmd!
     autocmd FileType python nnoremap <buffer> <leader>t :exec '!pytest' shellescape(@%, 1)<cr>
-    autocmd FileType python nnoremap <buffer> <leader>r :exec '!python' shellescape(@%, 1)<cr>
+    autocmd FileType python nnoremap <buffer> <leader>r :execute '!python' shellescape(@%, 1)<cr>
     "lint and save
     autocmd FileType python nnoremap <leader>l :PymodeLintAuto<cr>:w<cr> 
     autocmd FileType htmldjango,html inoremap <buffer> {% {%  %}<Left><Left><Left>
@@ -259,7 +278,13 @@ xmap gs  <plug>(GrepperOperator)
 "FZF
 nnoremap <leader>o :Files<CR>
 let $FZF_DEFAULT_COMMAND = 'ag -g ""' "need to install silversearcher-ag
+function! s:build_quickfix_list(lines)
+    call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
+    copen
+    cc
+endfunction
 let g:fzf_action = {
+            \ 'ctrl-q': function('s:build_quickfix_list'),
             \ 'ctrl-t': 'tab split',
             \ 'ctrl-i': 'split',
             \ 'ctrl-s': 'vsplit' }
@@ -273,7 +298,7 @@ let g:pymode_rope_lookup_project = 0
 let g:pymode_rope_autoimport = 1
 set completeopt=menuone,noinsert
 " let g:pymode_rope_rename_bind = '<C-c>r'
-let g:pymode_lint_ignore = ["E501","W0611","W0404","E702", "E711"]
+let g:pymode_lint_ignore = ["E501","W0611","W0404","E702", "E711", "E712"]
 let g:pymode_lint_unmodified = 1
 " let g:pymode_lint_on_fly = 1
 let g:pymode_run = 0
@@ -303,17 +328,35 @@ let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 "vimscript experiments
 iabbrev retrun return
 hi SpellBad cterm=underline
-nnoremap <leader>d :execute "normal! ddi\<c-g>u\edd"<cr>
 cnoremap <c-h> <left>
 cnoremap <c-l> <right>
-" delete first space
+" delete the first space
 nnoremap <silent> d<space> :<c-u>call <SID>DeleteSpace()<cr>
 function! s:DeleteSpace()
     " accept the match under cursor with 'c' flag
     call search('\v ', 'c')
     execute "normal! x"
 endfunction
- " nnoremap <leader>g :silent execute "grep! -R " . shellescape(expand("<cWORD>")) . " %:p:h"<cr>:copen 5<cr>:redraw!<cr>
 hi! link Operator GruvboxRed
+
+" delete 2 lines but register each delete seperately to undo tree
+" nnoremap <leader>d :execute "normal! ddi\<c-g>u\edd"<cr>
+ " nnoremap <leader>g :silent execute "grep! -R " . shellescape(expand("<cWORD>")) . " %:p:h"<cr>:copen 5<cr>:redraw!<cr>
 " setlocal foldmethod=indent
 " setlocal foldlevel=1
+" gv visual | z= spelling | \r \e expr-quote
+"
+" help various-motions
+" help sign-support
+" help virtualedit
+" help map-alt-keys
+" help error-messages
+" help development
+" help tips
+" help 24.8
+" help 24.9
+" help usr_12.txt
+" help usr_26.txt
+" help usr_32.txt
+" help usr_42.txt
+
