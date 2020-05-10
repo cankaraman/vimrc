@@ -81,7 +81,7 @@ function! MyLastWindow()
   endif
 endfunction
 
-let b:ale_fixers = {'javascript': ['eslint'], 'html': ['prettier']} "add prettier later
+let g:ale_fixers = {'javascript': ['prettier', 'eslint'], 'html': ['prettier']} "add prettier later
 let g:ale_fix_on_save = 1
 " let g:ale_set_loclist = 1
 " let g:ale_set_quickfix = 'on_save'
