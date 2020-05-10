@@ -23,10 +23,10 @@ Plug 'honza/vim-snippets' "coc
 " Plug 'SirVer/ultisnips' "coc
 " Plug 'ervandew/supertab' "coc
 " Plug 'ycm-core/YouCompleteMe' "coc
+" Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] } "Ag
 Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' } "coc
-Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] } "Ag
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim', {'on': 'Files'}
+Plug 'junegunn/fzf.vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'gryf/pylint-vim', {'for': 'python'}
 Plug 'justinmk/vim-sneak'
@@ -43,6 +43,29 @@ execute pathogen#infect()
 call pathogen#helptags()
 "}}}
 "experimental plugins
+
+"Ag search mappings
+nnoremap <silent> <leader>g :Ag<cr>
+nnoremap gs :set operatorfunc=<SID>SearchWithAg<cr>g@
+vnoremap gs :<c-u>call <SID>SearchWithAg(visualmode())<cr>
+function! s:SearchWithAg(type)
+    " echom "hey"
+    let l:saved_unnamed_register = @@
+
+    if a:type ==# 'v'
+        normal! `<v`>y
+    elseif a:type ==# 'char'
+        normal! `[v`]y
+    else
+        return
+    endif
+
+    silent execute "Ag " . @@
+    " echom "Ag " . shellescape(@@) 
+    let @@ = l:saved_unnamed_register
+endfunction
+
+
 augroup quit_quickfix
     au!
     au BufEnter * call MyLastWindow()
@@ -286,7 +309,7 @@ nnoremap Y yg_
 
 "search and replace
 nnoremap <C-f> /
-nnoremap <C-x> :nohlsearch<CR>
+nnoremap <C-b> :nohlsearch<CR>
 nnoremap <C-g> :%s//gc<left><left><left>
 
 "copy to clipboard
@@ -442,11 +465,11 @@ colorscheme gruvbox
 hi! link Operator GruvboxRed
 
 "grepper
-nnoremap <leader>g :Grepper<cr>
-let g:grepper = { 'next_tool': '<c-h>' }
-nmap gs  <plug>(GrepperOperator)
-vmap gs  <plug>(GrepperOperator)
-xmap gs  <plug>(GrepperOperator)
+" nnoremap <leader>g :Grepper<cr>
+" let g:grepper = { 'next_tool': '<c-h>' }
+" nmap gs  <plug>(GrepperOperator)
+" vmap gs  <plug>(GrepperOperator)
+" xmap gs  <plug>(GrepperOperator)
 
 "FZF
 nnoremap <leader>o :Files<CR>
@@ -462,7 +485,7 @@ let g:fzf_action = {
             \ 'ctrl-i': 'split',
             \ 'ctrl-s': 'vsplit' }
 nnoremap <Leader>b :Buffers<CR>
-nnoremap <Leader>h :History<CR>
+nnoremap <Leader>h :History:<CR>
 
 "python mode
 let g:pymode_python = 'python3'
