@@ -45,7 +45,7 @@ call pathogen#helptags()
 "experimental plugins
 
 "Ag search mappings
-nnoremap <silent> <leader>g :Ag<cr>
+nnoremap <leader>g :Ag<cr>
 nnoremap gs :set operatorfunc=<SID>SearchWithAg<cr>g@
 vnoremap gs :<c-u>call <SID>SearchWithAg(visualmode())<cr>
 function! s:SearchWithAg(type)
@@ -60,8 +60,8 @@ function! s:SearchWithAg(type)
         return
     endif
 
-    silent execute "Ag " . @@
-    " echom "Ag " . shellescape(@@) 
+    execute "Ag " . expand(@@)
+    " echom "Ag " . expand(@@)
     let @@ = l:saved_unnamed_register
 endfunction
 
