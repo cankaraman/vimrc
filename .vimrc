@@ -44,26 +44,6 @@ call pathogen#helptags()
 "}}}
 "experimental plugins
 
-"Ag search mappings
-nnoremap <leader>g :Ag<cr>
-nnoremap gs :set operatorfunc=<SID>SearchWithAg<cr>g@
-vnoremap gs :<c-u>call <SID>SearchWithAg(visualmode())<cr>
-function! s:SearchWithAg(type)
-    " echom "hey"
-    let l:saved_unnamed_register = @@
-
-    if a:type ==# 'v'
-        normal! `<v`>y
-    elseif a:type ==# 'char'
-        normal! `[v`]y
-    else
-        return
-    endif
-
-    execute "Ag " . expand(@@)
-    " echom "Ag " . expand(@@)
-    let @@ = l:saved_unnamed_register
-endfunction
 
 
 augroup quit_quickfix
@@ -82,7 +62,7 @@ function! MyLastWindow()
 endfunction
 
 let g:ale_fixers = {'javascript': ['prettier', 'eslint'], 'html': ['prettier']} "add prettier later
-let g:ale_fix_on_save = 1
+let g:ale_fix_on_save = 0
 " let g:ale_set_loclist = 1
 " let g:ale_set_quickfix = 'on_save'
 let g:ale_open_list = 'on_save'
@@ -94,7 +74,7 @@ augroup filetype_javascript
     autocmd!
     autocmd FileType javascript nnoremap <buffer> <leader>r :execute '!node' shellescape(@%, 1)<cr>
     "lint and save
-    autocmd FileType javascript nnoremap <leader>l <Plug>(ale_fix)
+    autocmd FileType javascript nnoremap <leader>l :ALEFix<cr>
     autocmd FileType javascript setlocal tabstop=8 softtabstop=0 expandtab shiftwidth=2 smarttab
 augroup end
 
@@ -178,17 +158,18 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
 
-" Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
 
-augroup mygroup
-  autocmd!
+" Formatting selected code.
+" xmap <leader>f  <Plug>(coc-format-selected)
+" nmap <leader>f  <Plug>(coc-format-selected)
+
+" augroup mygroup
+"   autocmd!
   " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
   " Update signature help on jump placeholder.
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
+  " autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+" augroup end
 
 " Applying codeAction to the selected region.
 " Example: `<leader>aap` for current paragraph
@@ -202,22 +183,22 @@ augroup end
 
 " Introduce function text object
 " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
-xmap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap if <Plug>(coc-funcobj-i)
-omap af <Plug>(coc-funcobj-a)
+" xmap if <Plug>(coc-funcobj-i)
+" xmap af <Plug>(coc-funcobj-a)
+" omap if <Plug>(coc-funcobj-i)
+" omap af <Plug>(coc-funcobj-a)
 
 " Use <TAB> for selections ranges.
 " NOTE: Requires 'textDocument/selectionRange' support from the language server.
 " coc-tsserver, coc-python are the examples of servers that support it.
-nmap <silent> <TAB> <Plug>(coc-range-select)
-xmap <silent> <TAB> <Plug>(coc-range-select)
+" nmap <silent> <TAB> <Plug>(coc-range-select)
+" xmap <silent> <TAB> <Plug>(coc-range-select)
 
 " Add `:Format` command to format current buffer.
-command! -nargs=0 Format :call CocAction('format')
+" command! -nargs=0 Format :call CocAction('format')
 
 " Add `:Fold` command to fold current buffer.
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+" command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
 " Add `:OR` command for organize imports of the current buffer.
 command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
@@ -233,7 +214,7 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 " Manage extensions.
 " nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
 " Show commands.
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+nnoremap <silent> <leader>c  :<C-u>CocList commands<cr>
 " Find symbol of current document.
 " nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
 " Search workspace symbols.
@@ -464,12 +445,6 @@ let g:gruvbox_italic=1
 colorscheme gruvbox
 hi! link Operator GruvboxRed
 
-"grepper
-" nnoremap <leader>g :Grepper<cr>
-" let g:grepper = { 'next_tool': '<c-h>' }
-" nmap gs  <plug>(GrepperOperator)
-" vmap gs  <plug>(GrepperOperator)
-" xmap gs  <plug>(GrepperOperator)
 
 "FZF
 nnoremap <leader>o :Files<CR>
@@ -545,3 +520,23 @@ let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 " help usr_32.txt
 " help usr_42.txt
 
+"Ag search mappings
+nnoremap <leader>g :Ag<cr>
+nnoremap gs :set operatorfunc=<SID>SearchWithAg<cr>g@
+vnoremap gs :<c-u>call <SID>SearchWithAg(visualmode())<cr>
+function! s:SearchWithAg(type)
+    " echom "hey"
+    let l:saved_unnamed_register = @@
+
+    if a:type ==# 'v'
+        normal! `<v`>y
+    elseif a:type ==# 'char'
+        normal! `[v`]y
+    else
+        return
+    endif
+
+    execute "Ag " . expand(@@)
+    " echom "Ag " . expand(@@)
+    let @@ = l:saved_unnamed_register
+endfunction
