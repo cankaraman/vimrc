@@ -104,9 +104,13 @@ inoremap <silent><expr> <TAB>
       \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 " Use <C-l> for trigger snippet expand.
-imap <C-e> <Plug>(coc-snippets-expand)
+" imap <C-e> <Plug>(coc-snippets-expand)
+
+" imap <C-e> <Plug>(coc-snippets-expand)
+" imap <C-e> <Plug>(coc-snippets-expand-jump)
+
 " Use <C-j> for select text for visual placeholder of snippet.
-vmap <C-j> <Plug>(coc-snippets-select)
+" vmap <C-j> <Plug>(coc-snippets-select)
 " inoremap <silent><expr> <TAB>
 "       \ pumvisible() ? coc#_select_confirm() :
 "       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
@@ -129,6 +133,11 @@ if exists('*complete_info')
   inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 else
   inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+endif
+if exists('*complete_info')
+  inoremap <expr> <c-e> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+else
+  inoremap <expr> <c-e> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 endif
 
 " Use `[g` and `]g` to navigate diagnostics
@@ -469,7 +478,7 @@ let g:pymode_rope = 1
 let g:pymode_rope_regenerate_on_write = 1
 let g:pymode_rope_lookup_project = 0
 let g:pymode_rope_autoimport = 1
-set completeopt=menuone,noinsert
+" set completeopt=menuone,noinsert
 " let g:pymode_rope_rename_bind = '<C-c>r'
 let g:pymode_lint_ignore = ["E501","W0611","W0404","E702", "E711", "E712"]
 let g:pymode_lint_unmodified = 1
@@ -487,9 +496,9 @@ let g:pymode_rope_autoimport_modules = ['os', 'django']
 " let g:SuperTabDefaultCompletionType = '<C-n>'
 
 " better key bindings for UltiSnipsExpandTrigger
-let g:UltiSnipsExpandTrigger = "<tab>"
-let g:UltiSnipsJumpForwardTrigger = "<tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+" let g:UltiSnipsExpandTrigger = "<tab>"
+" let g:UltiSnipsJumpForwardTrigger = "<tab>"
+" let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
 "Bracey HTML mappings
 " let g:bracey_server_port = 6001
