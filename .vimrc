@@ -5,6 +5,7 @@ endif
 if empty(glob("~/.vim/autoload/pathogen.vim"))
     execute '!mkdir -p ~/.vim/autoload ~/.vim/bundle && curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim'
 endif
+"TODO install Ag if it's not installed
 "}}}
 " Plugins {{{
 call plug#begin('~/.vim/plugged')
@@ -43,186 +44,12 @@ call plug#end()
 execute pathogen#infect()
 call pathogen#helptags()
 "}}}
-"experimental plugins
 
+" experimental settings
 
+" TODO: does not work. should underline in spellcheck
+hi SpellBad cterm=underline
 
-augroup quit_quickfix
-    au!
-    au BufEnter * call MyLastWindow()
-augroup end
-
-function! MyLastWindow()
-  " if the window is quickfix go on
-  if &buftype=="quickfix"
-    " if this window is last on screen quit without warning
-    if winbufnr(2) == -1
-      quit
-    endif
-  endif
-endfunction
-
-let g:ale_fixers = {'javascript': ['prettier', 'eslint'], 'html': ['prettier']} "add prettier later
-let g:ale_fix_on_save = 0
-" let g:ale_set_loclist = 1
-" let g:ale_set_quickfix = 'on_save'
-let g:ale_open_list = 'on_save'
-let g:ale_list_window_size = 3
-" let g:ale_keep_list_window_open = 1
-nmap <silent> ğ <Plug>(ale_previous_wrap)
-nmap <silent> ü <Plug>(ale_next_wrap)
-augroup filetype_javascript
-    autocmd!
-    autocmd FileType javascript nnoremap <buffer> <leader>r :execute '!node' shellescape(@%, 1)<cr>
-    "lint and save
-    autocmd FileType javascript nnoremap <leader>l :ALEFix<cr>
-    autocmd FileType javascript setlocal tabstop=8 softtabstop=0 expandtab shiftwidth=2 smarttab
-augroup end
-
-" COC
-" snippets.extends .vim/coc-settings.json CocConfig html in javascript
-"
-" Give more space for displaying messages.
-" set cmdheight=1
-
-" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-" delays and poor user experience.
-set updatetime=300
-
-" Don't pass messages to |ins-completion-menu|.
-set shortmess+=c
-
-" Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved.
-set signcolumn=yes
-
-" Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-let g:coc_snippet_next = '<C-l>'
-" Use <c-space> to trigger completion.
-" inoremap <silent><expr> <c-space> coc#refresh()
-
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-" position. Coc only does snippet and additional edit on confirm.
-" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
-if exists('*complete_info')
-  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-else
-  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-endif
-" Use <c-e> to confirm completion, `<C-g>u` means break undo chain at current
-if exists('*complete_info')
-  inoremap <expr> <c-e> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-else
-  inoremap <expr> <c-e> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-endif
-
-" Use `[g` and `]g` to navigate diagnostics
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-" GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
-
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" Symbol renaming.
-nmap <leader>rn <Plug>(coc-rename)
-
-
-" Formatting selected code.
-" xmap <leader>f  <Plug>(coc-format-selected)
-" nmap <leader>f  <Plug>(coc-format-selected)
-
-" augroup mygroup
-"   autocmd!
-  " Setup formatexpr specified filetype(s).
-  " autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder.
-  " autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-" augroup end
-
-" Applying codeAction to the selected region.
-" Example: `<leader>aap` for current paragraph
-" xmap <leader>a  <Plug>(coc-codeaction-selected)
-" nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-" Remap keys for applying codeAction to the current line.
-" nmap <leader>ac  <Plug>(coc-codeaction)
-" Apply AutoFix to problem on the current line.
-" nmap <leader>qf  <Plug>(coc-fix-current)
-
-" Introduce function text object
-" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
-" xmap if <Plug>(coc-funcobj-i)
-" xmap af <Plug>(coc-funcobj-a)
-" omap if <Plug>(coc-funcobj-i)
-" omap af <Plug>(coc-funcobj-a)
-
-" Use <TAB> for selections ranges.
-" NOTE: Requires 'textDocument/selectionRange' support from the language server.
-" coc-tsserver, coc-python are the examples of servers that support it.
-" nmap <silent> <TAB> <Plug>(coc-range-select)
-" xmap <silent> <TAB> <Plug>(coc-range-select)
-
-" Add `:Format` command to format current buffer.
-" command! -nargs=0 Format :call CocAction('format')
-
-" Add `:Fold` command to fold current buffer.
-" command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-
-" Add `:OR` command for organize imports of the current buffer.
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-
-" Add (Neo)Vim's native statusline support.
-" NOTE: Please see `:h coc-status` for integrations with external plugins that
-" provide custom statusline: lightline.vim, vim-airline.
-" set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
-" Mappings using CoCList:
-" Show all diagnostics.
-" nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions.
-" nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-" Show commands.
-nnoremap <silent> <leader>c  :<C-u>CocList commands<cr>
-" Find symbol of current document.
-" nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols.
-" nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-" nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-" nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list.
-" nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 " all sets {{{
 let &number = 1
 set formatoptions+=j " Delete comment character when joining commented lines
@@ -248,7 +75,6 @@ set hidden
 set splitright
 set pastetoggle=<F2>
 set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
-hi SpellBad cterm=underline
 "}}}
 "mappings for all filetypes {{{
 "experimental key mappings
@@ -354,8 +180,15 @@ augroup END
 "source vimrc
 nnoremap <leader>sv :source $MYVIMRC<cr>
 "}}}
-"autocmds {{{
+"autocmds filetype & others {{{
 "---------------------------------------------------------------------------------------------------
+augroup filetype_javascript
+    autocmd!
+    autocmd FileType javascript nnoremap <buffer> <leader>r :execute '!node' shellescape(@%, 1)<cr>
+    "lint and save
+    autocmd FileType javascript nnoremap <leader>l :ALEFix<cr>
+    autocmd FileType javascript setlocal tabstop=8 softtabstop=0 expandtab shiftwidth=2 smarttab
+augroup end
 
 augroup filetype_vim
     autocmd!
@@ -397,128 +230,99 @@ augroup filetype_python
     autocmd FileType htmldjango,html inoremap <buffer> {7 {%  %}<Left><Left><Left>
 augroup end
 " }}}
+" COC {{{
+" setup reminder snippets.extends .vim/coc-settings.json CocConfig html in javascript
+" CocInstall tsserver, coc-snippets, coc-json?
+
+" Give more space for displaying messages.
+set cmdheight=2
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+set signcolumn=yes
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:coc_snippet_next = '<C-l>'
+" Use <c-space> to trigger completion.
+" inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+" position. Coc only does snippet and additional edit on confirm.
+" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
+if exists('*complete_info')
+  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+else
+  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+endif
+" Use <c-e> to confirm completion, `<C-g>u` means break undo chain at current
+if exists('*complete_info')
+  inoremap <expr> <c-e> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+else
+  inoremap <expr> <c-e> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+endif
+
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+" Show commands.
+nnoremap <silent> <leader>c  :<C-u>CocList commands<cr>
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+" }}}
 "plugin related {{{
-"---------------------------------------------------------------------------------------------------
+"autopairs {{{
 " don't let auto-pairs use <c-h> in insert mode
 if !exists('g:AutoPairsMapCh')
   let g:AutoPairsMapCh = 0
 end
-
-"vim sneak
-nmap , <Plug>Sneak_;
-nmap ; <Plug>Sneak_,
-let g:sneak#s_next = 1
-" 2-character Sneak (default)
-nmap s <Plug>Sneak_s
-nmap S <Plug>Sneak_S
-" visual-mode
-xmap s <Plug>Sneak_s
-xmap S <Plug>Sneak_S
-" operator-pending-mode
-omap s <Plug>Sneak_s
-omap S <Plug>Sneak_S
-" disable vSneak_S for vim-surround vS
-vmap <nop> <Plug>Sneak_S
-
-"CamelCaseMotion
-nmap w <Plug>CamelCaseMotion_w
-nmap b <Plug>CamelCaseMotion_b
-nmap e <Plug>CamelCaseMotion_e
-
-"NERDtree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-" nnoremap <C-n> :NERDTreeToggle<CR>
-let NERDTreeIgnore=['\.pyc$', '^__pycache__$', '\.bin$', '\.db$']
-fun! ToggleNERDTreeWithRefresh()
-    :NERDTreeToggle 
-    if(exists("b:NERDTreeType") == 1)
-        call feedkeys("R")  
-    endif   
-endf 
-
-nnoremap <silent> <c-n> :call ToggleNERDTreeWithRefresh()<cr>
-
-"vim themes
-let g:gruvbox_italic=1
-colorscheme gruvbox
-hi! link Operator GruvboxRed
-
-
-"FZF
-nnoremap <leader>o :Files<CR>
-let $FZF_DEFAULT_COMMAND = 'ag -g ""' "need to install silversearcher-ag
-function! s:build_quickfix_list(lines)
-    call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
-    copen
-    cc
-endfunction
-let g:fzf_action = {
-            \ 'ctrl-q': function('s:build_quickfix_list'),
-            \ 'ctrl-t': 'tab split',
-            \ 'ctrl-i': 'split',
-            \ 'ctrl-s': 'vsplit' }
-nnoremap <Leader>b :Buffers<CR>
-nnoremap <Leader>h :History:<CR>
-
-"python mode
-let g:pymode_python = 'python3'
-let g:pymode_options_colorcolumn = 0
-let g:pymode_rope = 1
-let g:pymode_rope_regenerate_on_write = 1
-let g:pymode_rope_lookup_project = 0
-let g:pymode_rope_autoimport = 1
-" set completeopt=menuone,noinsert
-" let g:pymode_rope_rename_bind = '<C-c>r'
-let g:pymode_lint_ignore = ["E501","W0611","W0404","E702", "E711", "E712"]
-let g:pymode_lint_unmodified = 1
-" let g:pymode_lint_on_fly = 1
-let g:pymode_run = 0
-let g:pymode_lint_on_write = 1
-let g:pymode_syntax_highlight_equal_operator = 1
-let g:pymode_syntax_space_errors = 0
-let g:pymode_rope_completion = 0
-let g:pymode_rope_autoimport_modules = ['os', 'django']
-
-" make YCM compatible with UltiSnips (using supertab)
-" let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
-" let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-" let g:SuperTabDefaultCompletionType = '<C-n>'
-
-" better key bindings for UltiSnipsExpandTrigger
-" let g:UltiSnipsExpandTrigger = "<tab>"
-" let g:UltiSnipsJumpForwardTrigger = "<tab>"
-" let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-
-"Bracey HTML mappings
-" let g:bracey_server_port = 6001
-" let g:bracey_refresh_on_save =1
-"
-"}}}
-
-"--------------------------------------
-"vimscript experiments
-" delete 2 lines but register each delete seperately to undo tree
-" nnoremap <leader>d :execute "normal! ddi\<c-g>u\edd"<cr>
- " nnoremap <leader>g :silent execute "grep! -R " . shellescape(expand("<cWORD>")) . " %:p:h"<cr>:copen 5<cr>:redraw!<cr>
-" setlocal foldmethod=indent
-" setlocal foldlevel=1
-" gv visual | z= spelling | \r \e expr-quote
-"
-" help various-motions
-" help sign-support
-" help virtualedit
-" help map-alt-keys
-" help error-messages
-" help development
-" help tips
-" help 24.8
-" help 24.9
-" help usr_12.txt
-" help usr_26.txt
-" help usr_32.txt
-" help usr_42.txt
-
-"Ag search mappings
+" }}}
+"Ale ALE{{{
+let g:ale_fixers = {'javascript': ['prettier', 'eslint'], 'html': ['prettier']} "add prettier later
+let g:ale_fix_on_save = 0
+" let g:ale_open_list = 'on_save'
+" let g:ale_list_window_size = 3
+nmap <silent> ğ <Plug>(ale_previous_wrap)
+nmap <silent> ü <Plug>(ale_next_wrap)
+" }}}
+"Ag search mappings {{{
 nnoremap <leader>g :Ag<cr>
 nnoremap gs :set operatorfunc=<SID>SearchWithAg<cr>g@
 vnoremap gs :<c-u>call <SID>SearchWithAg(visualmode())<cr>
@@ -538,3 +342,131 @@ function! s:SearchWithAg(type)
     " echom "Ag " . expand(@@)
     let @@ = l:saved_unnamed_register
 endfunction
+" }}}
+"vim sneak {{{
+nmap , <Plug>Sneak_;
+nmap ; <Plug>Sneak_,
+let g:sneak#s_next = 1
+" 2-character Sneak (default)
+nmap s <Plug>Sneak_s
+nmap S <Plug>Sneak_S
+" visual-mode
+xmap s <Plug>Sneak_s
+xmap S <Plug>Sneak_S
+" operator-pending-mode
+omap s <Plug>Sneak_s
+omap S <Plug>Sneak_S
+" disable vSneak_S for vim-surround vS
+vmap <nop> <Plug>Sneak_S
+" }}}
+"CamelCaseMotion{{{
+nmap w <Plug>CamelCaseMotion_w
+nmap b <Plug>CamelCaseMotion_b
+nmap e <Plug>CamelCaseMotion_e
+" }}}
+"NERDtree {{{
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" nnoremap <C-n> :NERDTreeToggle<CR>
+let NERDTreeIgnore=['\.pyc$', '^__pycache__$', '\.bin$', '\.db$']
+fun! ToggleNERDTreeWithRefresh()
+    :NERDTreeToggle 
+    if(exists("b:NERDTreeType") == 1)
+        call feedkeys("R")  
+    endif   
+endf 
+
+nnoremap <silent> <c-n> :call ToggleNERDTreeWithRefresh()<cr>
+" }}}
+"gruvbox theme {{{
+let g:gruvbox_italic=1
+colorscheme gruvbox
+hi! link Operator GruvboxRed
+" }}}
+"FZF{{{
+nnoremap <leader>o :Files<CR>
+let $FZF_DEFAULT_COMMAND = 'ag -g ""' "need to install silversearcher-ag
+function! s:build_quickfix_list(lines)
+    call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
+    copen
+    cc
+endfunction
+let g:fzf_action = {
+            \ 'ctrl-q': function('s:build_quickfix_list'),
+            \ 'ctrl-t': 'tab split',
+            \ 'ctrl-i': 'split',
+            \ 'ctrl-s': 'vsplit' }
+nnoremap <Leader>b :Buffers<CR>
+nnoremap <Leader>h :History:<CR>
+" }}}
+"python mode{{{
+let g:pymode_python = 'python3'
+let g:pymode_options_colorcolumn = 0
+let g:pymode_rope = 1
+let g:pymode_rope_regenerate_on_write = 1
+let g:pymode_rope_lookup_project = 0
+let g:pymode_rope_autoimport = 1
+" set completeopt=menuone,noinsert
+" let g:pymode_rope_rename_bind = '<C-c>r'
+let g:pymode_lint_ignore = ["E501","W0611","W0404","E702", "E711", "E712"]
+let g:pymode_lint_unmodified = 1
+" let g:pymode_lint_on_fly = 1
+let g:pymode_run = 0
+let g:pymode_lint_on_write = 1
+let g:pymode_syntax_highlight_equal_operator = 1
+let g:pymode_syntax_space_errors = 0
+let g:pymode_rope_completion = 0
+let g:pymode_rope_autoimport_modules = ['os', 'django']
+" }}}
+" old plugin settings{{{
+" make YCM compatible with UltiSnips (using supertab)
+" let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+" let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+" let g:SuperTabDefaultCompletionType = '<C-n>'
+
+" better key bindings for UltiSnipsExpandTrigger
+" let g:UltiSnipsExpandTrigger = "<tab>"
+" let g:UltiSnipsJumpForwardTrigger = "<tab>"
+" let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+
+"Bracey HTML mappings
+" let g:bracey_server_port = 6001
+" let g:bracey_refresh_on_save =1
+"}}}
+
+"}}}
+" added functionlities {{{
+augroup quit_quickfix
+    au!
+    au BufEnter * call MyLastWindow()
+augroup end
+
+function! MyLastWindow()
+  " if the window is quickfix go on
+  if &buftype=="quickfix"
+    " if this window is last on screen quit without warning
+    if winbufnr(2) == -1
+      quit
+    endif
+  endif
+endfunction
+" }}}
+"------end-of-vimrc-----------------
+""vimscript topics to study {{{
+" setlocal foldmethod=indent
+" setlocal foldlevel=1
+" gv visual | z= spelling | \r \e expr-quote
+"
+" help various-motions
+" help sign-support
+" help virtualedit
+" help map-alt-keys
+" help error-messages
+" help development
+" help tips
+" help 24.8
+" help 24.9
+" help usr_12.txt
+" help usr_26.txt
+" help usr_32.txt
+" help usr_42.txt
+" }}}
