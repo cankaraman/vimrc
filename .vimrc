@@ -18,6 +18,8 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-fugitive'
+" Plug 'tpope/vim-vinegar'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'bkad/CamelCaseMotion'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -36,10 +38,6 @@ Plug 'turbio/bracey.vim'
 Plug 'adelarsq/vim-matchit'
 Plug 'sheerun/vim-polyglot'
 Plug 'dense-analysis/ale', {'for': ['javascript', 'html']}
-" Plug 'jvanja/vim-bootstrap4-snippets', { 'for': 'html' }
-" Plug 'tpope/vim-vinegar'
-" vim git
-" Plug 'maxbrunsfeld/vim-yankstack'
 call plug#end()
 execute pathogen#infect()
 call pathogen#helptags()
@@ -49,6 +47,7 @@ call pathogen#helptags()
 
 " TODO: does not work. should underline in spellcheck
 hi SpellBad cterm=underline
+" let g:coc_snippet_next = '<C-l>'
 
 " all sets {{{
 let &number = 1
@@ -259,7 +258,7 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-let g:coc_snippet_next = '<C-l>'
+" let g:coc_snippet_next = '<C-l>'
 " Use <c-space> to trigger completion.
 " inoremap <silent><expr> <c-space> coc#refresh()
 
