@@ -43,6 +43,10 @@ call pathogen#helptags()
 
 " TODO: does not work. should underline in spellcheck
 hi SpellBad cterm=underline
+
+"e.g.
+" onoremap in( :<c-u>normal! f(vi(<cr>
+" onoremap il( :<c-u>normal! F(vi(<cr>
 " let g:coc_snippet_next = '<C-k>'
 " let g:coc_snippet_next = '<C-j>'
 
@@ -73,8 +77,6 @@ set pastetoggle=<F2>
 set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
 "}}}
 "mappings for all filetypes {{{
-"experimental key mappings
-" ----------------------
 iabbrev retrun return
 cnoremap <c-h> <left>
 cnoremap <c-l> <right>
@@ -86,8 +88,9 @@ function! s:DeleteSpace()
     execute "normal! x"
 endfunction
 
-" paste unnamed register in the insert mode
+" paste unnamed register in the insert & command mode
 inoremap <c-v> <c-r>"
+cnoremap <c-v> <c-r>"
 
 " till the end of the line
 nnoremap L g_
@@ -96,15 +99,10 @@ onoremap L g_
 nnoremap H ^
 onoremap H ^
 
-nnoremap <F5> :buffers<CR>:buffer<Space>
-
-" Map w!! to write file with sudo, when forgot to open with sudo.
-cnoremap w!! w !sudo tee % >/dev/null
-
 " Map F4 key to toggle spell checking
 noremap <F4> :setlocal spell! spelllang=en_us<CR>
 
-"make Y and V same as D&C
+"make Y same as D&C
 nnoremap Y yg_
 " nnoremap V vg_
 
@@ -154,26 +152,13 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-onoremap " i"
-onoremap ' i'
-onoremap ( i(
-onoremap [ i[
-onoremap { i{
-"feyz almalik
-onoremap in( :<c-u>normal! f(vi(<cr>
-onoremap il( :<c-u>normal! F(vi(<cr>
-augroup markdownExample
-    autocmd!
-    autocmd FileType markdown onoremap ih :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rkvg_"<cr>
-augroup end
-
 "quick vimrc edit
 nnoremap <leader>v :split $MYVIMRC<CR>
 augroup myvimrc
     autocmd!
     autocmd BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc source $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
-augroup END
-"source vimrc
+augroup end
+"source vimrc manualy
 nnoremap <leader>sv :source $MYVIMRC<cr>
 "}}}
 "autocmds filetype & others {{{
