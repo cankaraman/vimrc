@@ -19,15 +19,11 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
-" Plug 'tpope/vim-vinegar'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'bkad/CamelCaseMotion'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'honza/vim-snippets' "coc
+Plug 'honza/vim-snippets'
 " Plug 'SirVer/ultisnips' "coc
-" Plug 'ervandew/supertab' "coc
-" Plug 'ycm-core/YouCompleteMe' "coc
-" Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] } "Ag
 Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' } "coc
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -47,7 +43,8 @@ call pathogen#helptags()
 
 " TODO: does not work. should underline in spellcheck
 hi SpellBad cterm=underline
-" let g:coc_snippet_next = '<C-l>'
+" let g:coc_snippet_next = '<C-k>'
+" let g:coc_snippet_next = '<C-j>'
 
 " all sets {{{
 let &number = 1
