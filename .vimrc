@@ -41,14 +41,15 @@ call pathogen#helptags()
 
 " experimental settings
 
-" TODO: does not work. should underline in spellcheck
-hi SpellBad cterm=underline
+vnoremap / "ny/<c-r>n
+
 
 "e.g.
 " onoremap in( :<c-u>normal! f(vi(<cr>
 " onoremap il( :<c-u>normal! F(vi(<cr>
 " let g:coc_snippet_next = '<C-k>'
 " let g:coc_snippet_next = '<C-j>'
+
 
 " all sets {{{
 let &number = 1
@@ -296,7 +297,7 @@ if !exists('g:AutoPairsMapCh')
 end
 " }}}
 "Ale ALE{{{
-let g:ale_fixers = {'javascript': ['prettier', 'eslint'], 'html': ['prettier']} "add prettier later
+let g:ale_fixers = {'javascript': ['prettier', 'eslint'], 'css':['prettier'], 'html': ['prettier']} "add prettier later
 let g:ale_fix_on_save = 0
 " let g:ale_open_list = 'on_save'
 " let g:ale_list_window_size = 3
@@ -451,3 +452,5 @@ endfunction
 " help usr_32.txt
 " help usr_42.txt
 " }}}
+
+hi SpellBad cterm=underline
