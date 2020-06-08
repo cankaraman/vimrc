@@ -41,8 +41,10 @@ call pathogen#helptags()
 
 " experimental settings
 
-vnoremap / "ny/<c-r>n
-
+" search/replace visual selection
+vnoremap / "zy/<c-r>z
+vnoremap <C-g> "zy:%s/<c-r>z//gc<left><left><left>
+cabbrev git Git
 
 "e.g.
 " onoremap in( :<c-u>normal! f(vi(<cr>
@@ -297,7 +299,7 @@ if !exists('g:AutoPairsMapCh')
 end
 " }}}
 "Ale ALE{{{
-let g:ale_fixers = {'javascript': ['prettier', 'eslint'], 'css':['prettier'], 'html': ['prettier']} "add prettier later
+let g:ale_fixers = {'javascript': ['eslint'], 'css':['prettier'], 'html': ['prettier']} "add prettier later
 let g:ale_fix_on_save = 0
 " let g:ale_open_list = 'on_save'
 " let g:ale_list_window_size = 3
