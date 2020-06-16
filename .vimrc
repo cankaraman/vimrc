@@ -46,6 +46,13 @@ vnoremap / "zy/<c-r>z
 vnoremap <C-g> "zy:%s/<c-r>z//gc<left><left><left>
 cabbrev git Git
 
+xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
+
+function! ExecuteMacroOverVisualRange()
+  echo "@".getcmdline()
+  execute ":'<,'>normal @".nr2char(getchar())
+endfunction
+
 "e.g.
 " onoremap in( :<c-u>normal! f(vi(<cr>
 " onoremap il( :<c-u>normal! F(vi(<cr>
