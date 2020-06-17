@@ -53,6 +53,10 @@ function! ExecuteMacroOverVisualRange()
   execute ":'<,'>normal @".nr2char(getchar())
 endfunction
 
+
+" global/{match}/normal @{register}
+" gn next word operator
+
 "e.g.
 " onoremap in( :<c-u>normal! f(vi(<cr>
 " onoremap il( :<c-u>normal! F(vi(<cr>
@@ -85,7 +89,9 @@ set hidden
 set splitright
 set pastetoggle=<F2>
 set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
+hi SpellBad cterm=underline
 "}}}
+
 "mappings for all filetypes {{{
 iabbrev retrun return
 cnoremap <c-h> <left>
@@ -171,6 +177,7 @@ augroup end
 "source vimrc manualy
 nnoremap <leader>sv :source $MYVIMRC<cr>
 "}}}
+
 "autocmds filetype & others {{{
 "---------------------------------------------------------------------------------------------------
 augroup filetype_javascript
@@ -221,6 +228,8 @@ augroup filetype_python
     autocmd FileType htmldjango,html inoremap <buffer> {7 {%  %}<Left><Left><Left>
 augroup end
 " }}}
+
+"plugin related {{{
 " COC {{{
 " setup reminder snippets.extends .vim/coc-settings.json CocConfig html in javascript
 " CocInstall tsserver, coc-snippets, coc-json?
@@ -298,7 +307,6 @@ nnoremap <silent> <leader>c  :<C-u>CocList commands<cr>
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
 " }}}
-"plugin related {{{
 "autopairs {{{
 " don't let auto-pairs use <c-h> in insert mode
 if !exists('g:AutoPairsMapCh')
@@ -312,27 +320,6 @@ let g:ale_fix_on_save = 0
 " let g:ale_list_window_size = 3
 nmap <silent> ğ <Plug>(ale_previous_wrap)
 nmap <silent> ü <Plug>(ale_next_wrap)
-" }}}
-"Ag search mappings {{{
-nnoremap <leader>g :Ag<cr>
-nnoremap gs :set operatorfunc=<SID>SearchWithAg<cr>g@
-vnoremap gs :<c-u>call <SID>SearchWithAg(visualmode())<cr>
-function! s:SearchWithAg(type)
-    " echom "hey"
-    let l:saved_unnamed_register = @@
-
-    if a:type ==# 'v'
-        normal! `<v`>y
-    elseif a:type ==# 'char'
-        normal! `[v`]y
-    else
-        return
-    endif
-
-    execute "Ag " . expand(@@)
-    " echom "Ag " . expand(@@)
-    let @@ = l:saved_unnamed_register
-endfunction
 " }}}
 "vim sneak {{{
 nmap , <Plug>Sneak_;
@@ -374,6 +361,30 @@ colorscheme gruvbox
 hi! link Operator GruvboxRed
 " }}}
 "FZF{{{
+"Ag search mappings {{{
+"select all with ctrl-a
+command! -bang -nargs=* Ag
+\ call fzf#vim#ag(<q-args>, '', { 'options': '--bind ctrl-a:select-all,ctrl-d:deselect-all' }, <bang>0)
+nnoremap <leader>g :Ag<cr>
+nnoremap gs :set operatorfunc=<SID>SearchWithAg<cr>g@
+vnoremap gs :<c-u>call <SID>SearchWithAg(visualmode())<cr>
+function! s:SearchWithAg(type)
+    " echom "hey"
+    let l:saved_unnamed_register = @@
+
+    if a:type ==# 'v'
+        normal! `<v`>y
+    elseif a:type ==# 'char'
+        normal! `[v`]y
+    else
+        return
+    endif
+
+    execute "Ag " . expand(@@)
+    " echom "Ag " . expand(@@)
+    let @@ = l:saved_unnamed_register
+endfunction
+" }}}
 nnoremap <leader>o :Files<CR>
 let $FZF_DEFAULT_COMMAND = 'ag -g ""' "need to install silversearcher-ag
 function! s:build_quickfix_list(lines)
@@ -383,7 +394,6 @@ function! s:build_quickfix_list(lines)
 endfunction
 let g:fzf_action = {
             \ 'ctrl-q': function('s:build_quickfix_list'),
-            \ 'ctrl-t': 'tab split',
             \ 'ctrl-i': 'split',
             \ 'ctrl-s': 'vsplit' }
 nnoremap <Leader>b :Buffers<CR>
@@ -425,6 +435,7 @@ let g:pymode_rope_autoimport_modules = ['os', 'django']
 "}}}
 
 "}}}
+
 " added functionlities {{{
 augroup quit_quickfix
     au!
@@ -441,6 +452,7 @@ function! MyLastWindow()
   endif
 endfunction
 " }}}
+
 "------end-of-vimrc-----------------
 ""vimscript topics to study {{{
 " setlocal foldmethod=indent
@@ -462,4 +474,3 @@ endfunction
 " help usr_42.txt
 " }}}
 
-hi SpellBad cterm=underline
