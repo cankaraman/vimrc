@@ -24,7 +24,7 @@ Plug 'bkad/CamelCaseMotion'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'honza/vim-snippets'
 " Plug 'SirVer/ultisnips' "coc
-Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' } "coc
+" Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' } "coc
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'jiangmiao/auto-pairs'
@@ -210,7 +210,7 @@ augroup filetype_html
     autocmd!
     autocmd FileType html nnoremap <buffer> <leader>r :BraceyReload<cr>
     " autocmd FileType html inoremap <leader>r <Esc>:BraceyReload<cr>a
-    autocmd FileType html nnoremap <buffer> <leader>b :Bracey<cr>
+    " autocmd FileType html nnoremap <buffer> <leader>b :Bracey<cr>
     autocmd FileType html setlocal tabstop=8 softtabstop=0 expandtab shiftwidth=2 smarttab
     "js comment in html
     autocmd FileType html nnoremap <buffer> <leader>c I// <esc>
@@ -221,7 +221,7 @@ augroup end
 augroup filetype_python
     autocmd!
     autocmd FileType python nnoremap <buffer> <leader>t :exec '!pytest' shellescape(@%, 1)<cr>
-    autocmd FileType python nnoremap <buffer> <leader>r :execute '!python' shellescape(@%, 1)<cr>
+    autocmd FileType python nnoremap <buffer> <leader>r :exec '!python' shellescape(@%, 1)<cr>
     "lint and save
     autocmd FileType python nnoremap <leader>l :PymodeLintAuto<cr>:w<cr> 
     autocmd FileType htmldjango,html inoremap <buffer> {% {%  %}<Left><Left><Left>
@@ -332,8 +332,8 @@ nmap S <Plug>Sneak_S
 xmap s <Plug>Sneak_s
 xmap S <Plug>Sneak_S
 " operator-pending-mode
-omap s <Plug>Sneak_s
-omap S <Plug>Sneak_S
+omap z <Plug>Sneak_s
+omap Z <Plug>Sneak_S
 " disable vSneak_S for vim-surround vS
 vmap <nop> <Plug>Sneak_S
 " }}}
@@ -400,23 +400,24 @@ nnoremap <Leader>b :Buffers<CR>
 nnoremap <Leader>h :History:<CR>
 " }}}
 "python mode{{{
-let g:pymode_python = 'python3'
-let g:pymode_options_colorcolumn = 0
-let g:pymode_rope = 1
-let g:pymode_rope_regenerate_on_write = 1
-let g:pymode_rope_lookup_project = 0
-let g:pymode_rope_autoimport = 1
-" set completeopt=menuone,noinsert
-" let g:pymode_rope_rename_bind = '<C-c>r'
-let g:pymode_lint_ignore = ["E501","W0611","W0404","E702", "E711", "E712"]
-let g:pymode_lint_unmodified = 1
-" let g:pymode_lint_on_fly = 1
-let g:pymode_run = 0
-let g:pymode_lint_on_write = 1
-let g:pymode_syntax_highlight_equal_operator = 1
-let g:pymode_syntax_space_errors = 0
-let g:pymode_rope_completion = 0
-let g:pymode_rope_autoimport_modules = ['os', 'django']
+" let g:pymode_python = 'python3'
+" let g:pymode_breakpoint_bind = 'gb'
+" let g:pymode_options_colorcolumn = 0
+" let g:pymode_rope = 1
+" let g:pymode_rope_regenerate_on_write = 1
+" let g:pymode_rope_lookup_project = 0
+" let g:pymode_rope_autoimport = 1
+" " set completeopt=menuone,noinsert
+" " let g:pymode_rope_rename_bind = '<C-c>r'
+" let g:pymode_lint_ignore = ["E501","W0611","W0404","E702", "E711", "E712"]
+" let g:pymode_lint_unmodified = 1
+" " let g:pymode_lint_on_fly = 1
+" let g:pymode_run = 0
+" let g:pymode_lint_on_write = 1
+" let g:pymode_syntax_highlight_equal_operator = 1
+" let g:pymode_syntax_space_errors = 0
+" let g:pymode_rope_completion = 0
+" let g:pymode_rope_autoimport_modules = ['os', 'django']
 " }}}
 " old plugin settings{{{
 " make YCM compatible with UltiSnips (using supertab)
