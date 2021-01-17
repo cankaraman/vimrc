@@ -1,3 +1,4 @@
+" install youcompleteme later
 " Download vim-plug and pathogen when vim runs for the very first time {{{
 if empty(glob("~/.vim/autoload/plug.vim"))
     execute '!mkdir -p .vim/autoload && curl -fLo ~/.vim/autoload/plug.vim https://raw.github.com/junegunn/vim-plug/master/plug.vim'
@@ -21,19 +22,13 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'bkad/CamelCaseMotion'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'honza/vim-snippets'
-" Plug 'SirVer/ultisnips' "coc
-" Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' } "coc
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'jiangmiao/auto-pairs'
-Plug 'gryf/pylint-vim', {'for': 'python'}
 Plug 'justinmk/vim-sneak'
-Plug 'turbio/bracey.vim'
 Plug 'adelarsq/vim-matchit'
 Plug 'sheerun/vim-polyglot'
-Plug 'dense-analysis/ale', {'for': ['javascript', 'html']}
 call plug#end()
 execute pathogen#infect()
 call pathogen#helptags()
@@ -230,96 +225,11 @@ augroup end
 " }}}
 
 "plugin related {{{
-" COC {{{
-" setup reminder snippets.extends .vim/coc-settings.json CocConfig html in javascript
-" CocInstall tsserver, coc-snippets, coc-json?
-
-" Give more space for displaying messages.
-set cmdheight=2
-" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-" delays and poor user experience.
-set updatetime=300
-" Don't pass messages to |ins-completion-menu|.
-set shortmess+=c
-" Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved.
-set signcolumn=yes
-
-" Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" let g:coc_snippet_next = '<C-l>'
-" Use <c-space> to trigger completion.
-" inoremap <silent><expr> <c-space> coc#refresh()
-
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-" position. Coc only does snippet and additional edit on confirm.
-" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
-if exists('*complete_info')
-  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-else
-  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-endif
-" Use <c-e> to confirm completion, `<C-g>u` means break undo chain at current
-if exists('*complete_info')
-  inoremap <expr> <c-e> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-else
-  inoremap <expr> <c-e> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-endif
-
-" Use `[g` and `]g` to navigate diagnostics
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-" GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
-
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
-" Add `:OR` command for organize imports of the current buffer.
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-" Show commands.
-nnoremap <silent> <leader>c  :<C-u>CocList commands<cr>
-" Symbol renaming.
-nmap <leader>rn <Plug>(coc-rename)
-" }}}
 "autopairs {{{
 " don't let auto-pairs use <c-h> in insert mode
 if !exists('g:AutoPairsMapCh')
   let g:AutoPairsMapCh = 0
 end
-" }}}
-"Ale ALE{{{
-let g:ale_fixers = {'javascript': ['eslint'], 'css':['prettier'], 'html': ['prettier']} "add prettier later
-let g:ale_fix_on_save = 0
-" let g:ale_open_list = 'on_save'
-" let g:ale_list_window_size = 3
-nmap <silent> ğ <Plug>(ale_previous_wrap)
-nmap <silent> ü <Plug>(ale_next_wrap)
 " }}}
 "vim sneak {{{
 nmap , <Plug>Sneak_;
@@ -398,26 +308,6 @@ let g:fzf_action = {
             \ 'ctrl-s': 'vsplit' }
 nnoremap <Leader>b :Buffers<CR>
 nnoremap <Leader>h :History:<CR>
-" }}}
-"python mode{{{
-" let g:pymode_python = 'python3'
-" let g:pymode_breakpoint_bind = 'gb'
-" let g:pymode_options_colorcolumn = 0
-" let g:pymode_rope = 1
-" let g:pymode_rope_regenerate_on_write = 1
-" let g:pymode_rope_lookup_project = 0
-" let g:pymode_rope_autoimport = 1
-" " set completeopt=menuone,noinsert
-" " let g:pymode_rope_rename_bind = '<C-c>r'
-" let g:pymode_lint_ignore = ["E501","W0611","W0404","E702", "E711", "E712"]
-" let g:pymode_lint_unmodified = 1
-" " let g:pymode_lint_on_fly = 1
-" let g:pymode_run = 0
-" let g:pymode_lint_on_write = 1
-" let g:pymode_syntax_highlight_equal_operator = 1
-" let g:pymode_syntax_space_errors = 0
-" let g:pymode_rope_completion = 0
-" let g:pymode_rope_autoimport_modules = ['os', 'django']
 " }}}
 " old plugin settings{{{
 " make YCM compatible with UltiSnips (using supertab)
